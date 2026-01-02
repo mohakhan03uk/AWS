@@ -176,6 +176,7 @@ sequenceDiagram
 - **Port/Protocol:** HTTP :80.
 - **Health check:** `GET /` expecting 200–399; ALB routes only to **healthy** targets.
 ##### A Target Group is a logical container that stores a list of backend targets.
+> **TG can only be attached to LBs**
 >These targets receive traffic from:
 ```
 ALB (Application Load Balancer)
