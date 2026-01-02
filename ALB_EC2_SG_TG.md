@@ -196,6 +196,8 @@ A Target Group defines:
 > They need an intermediate layer that defines: Type of Target, Port of Target, Protocol , Health check rules
 > Without TG: Load balancer would not know which backend is alive/unhealthy.
 > Supported TG types: instance ( EC2) , ip ( pod , container, on-prem-IP) , lamda ( ALB-to_Lamda)
+> Network Load Balancer (NLB)  : Supported TG types: instance ( EC2) , ip ( pod , container, on-prem-IP) , ALB ( rare, used for chained load balancers)
+
 ### EC2 (`xfusion-ec2`)
 - Runs Nginx on :80; reachable only via ALB.
 - Prefer private subnets and avoid public IP exposure.
