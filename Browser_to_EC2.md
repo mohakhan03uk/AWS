@@ -5,9 +5,8 @@
 
 ---
 
-## 1) Architecture Diagrams (Mermaid) — **Corrected**
-
-### A. Layered Components and Relationships (no special shapes that break parsing)
+## 1) Architecture Diagrams 
+### A. Layered Components and Relationships 
 ```mermaid
 
 flowchart LR
@@ -78,14 +77,19 @@ sequenceDiagram
 
 | Component | Why We Need It |
 |----------|----------------|
-| **VPC** | The isolated network where EC2 lives. |
-| **Public Subnet** | A subnet is *public* only if its route table has `0.0.0.0/0 -> IGW`. |
-| **Internet Gateway (IGW)** | Enables two-way internet connectivity for public IPs in the VPC. |
-| **Route Table** | Holds the default outbound route to the IGW; associated with the public subnet. |
-| **Public IP / Elastic IP** | Required so the internet can return traffic to the EC2 (routable address). |
-| **Security Group (SG)** | Virtual firewall; must allow inbound `80/443` for web and typically `22` for SSH. |
-| **Network ACL (NACL)** | Subnet-level stateless filter; must permit inbound 80/443 and outbound ephemeral. |
-| **Web Server / App** | Something listening on `80/443` (e.g., Nginx/Apache/Node) to respond to browser requests. |
+| **VPC** | The isolated private network where EC2 lives. It provides IP addressing, routing domain, isolation, and allows segmentation of public and private subnets. All networking boundaries start here. |
+| **Public Subnet** | A subnet is *public* only if its route table has `0.0.0.0/0 -> IGW`. This gives EC2 instances inside it the ability to send outbound traffic to the internet and receive responses. |
+| **Internet Gateway (IGW)** | Allows two way communication between VPC and the public internet. It supports NAT for public IPs and makes the VPC reachable from outside networks. Without IGW, public IPs cannot be used.|
+| **Route Table** |Holds routing rules for traffic leaving the subnet. The public subnet must have a default route that targets the IGW. This ensures any non VPC traffic goes to the internet.|
+| **Public IP / Elastic IP** | Public IPs allow the EC2 to be uniquely reachable from the global internet. Elastic IPs are static and persistent, ensuring stable DNS and browser access even across reboots. |
+| **Security Group (SG)** |Stateful virtual firewall at the instance level. Must allow inbound HTTP 80 and HTTPS 443 for web apps, and usually SSH 22 from your IP for administration. Outbound is open by default to allow return traffic.|
+| **Network ACL (NACL)** | Stateless subnet level firewall. Must permit inbound 80 and 443, and outbound ephemeral ports for return traffic. Helps enforce an additional security layer beyond SG. |
+| **Web Server / App** | Something listening on `80/443` (e.g., Nginx/Apache/Node) to respond to browser requests. Without Nginx, Apache, Node, or a similar service listening on the port, the EC2 cannot respond to HTTP requests.|
+| **EC2 OS Firewall (Optional but important)** | OS level firewall like iptables or ufw must not block ports 80 or 443. Even if SG and NACL allow traffic, the OS firewall can silently drop packets.|
+| **DNS (Optional)** | To access EC2 via a friendly domain name instead of IP. If using Elastic IP, you can map a DNS A record to the EIP for stable URLs.|
+| **Key Pair (For SSH)** | Needed only for administrative access to the EC2. It doesn't affect browser access but is required for remote login to configure or troubleshoot the server. |
+| **VPC CIDR Planning** |Proper subnet sizing ensures enough usable IPs for scaling and avoids overlapping CIDRs that can break routing with VPN or Direct Connect in future. |
+
 
 ---
 
