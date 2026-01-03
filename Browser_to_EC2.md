@@ -60,15 +60,19 @@ sequenceDiagram
   participant A as Web App (Nginx/Apache)
 
   B->>I: HTTP GET /
+
   I->>G: Forward packet to VPC (public IP)
-  G->>R: Enter VPC consult routing 
-  R->>S: Route 0.0.0.0/0 -> IGW (association ensures path)
-  S->>E: Deliver to instance
-  E->>A: App receives request on 80/443
-  A-->>B: Response returns via public IP path
+  alt VPC (10.0.0.0/16)
+    G->>R: Enter VPC consult routing
+    R->>S: Route 0.0.0.0/0 -> IGW (association ensures path)
+    S->>E: Deliver to instance
+    E->>A: App receives request on 80/443
 
   Note over E: SG must allow 80/443 (and 22 if SSH)
   Note over S: NACL permits inbound 80/443 and outbound ephemeral ports
+  end 
+  A-->>B: Response returns via public IP path
+
 ```
 
 ---
