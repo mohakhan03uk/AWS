@@ -91,17 +91,17 @@ Where it applies:
 flowchart TB
   %% GitHub-safe AWS-style diagram with WHY included
 
-  subgraph DEF_VPC[Amazon VPC</b>Default VPC</b>CIDR 172.31.0.0/16]
-    PUB_EC2[Amazon EC2</b>nautilus-public-ec2</b>Has Public IP]
-    RT_DEF[AWS Route Table</b>Route to 10.1.0.0/16 via peering]
-    SG_PUB[AWS Security Group</b>Egress allows 10.1.0.0/16]
+  subgraph DEF_VPC[Amazon VPC</br>Default VPC</br>CIDR 172.31.0.0/16]
+    PUB_EC2[Amazon EC2</br>nautilus-public-ec2</br>Has Public IP]
+    RT_DEF[AWS Route Table</br>Route to 10.1.0.0/16 via peering]
+    SG_PUB[AWS Security Group</br>Egress allows 10.1.0.0/16]
   end
 
-  subgraph PRIV_VPC[Amazon VPC</b>nautilus-private-vpc</b>CIDR 10.1.0.0/16]
-    PRIV_SUB[Subnet</b>nautilus-private-subnet</b>CIDR 10.1.1.0/24]
-    PRIV_EC2[Amazon EC2</b>nautilus-private-ec2</b>Private only</b>No public IP]
-    RT_PRIV[AWS Route Table</b>Route to 172.31.0.0/16 via peering]
-    SG_PRIV[AWS Security Group</b>Inbound SSH or ICMP</b>Source = public EC2 SG or IP]
+  subgraph PRIV_VPC[Amazon VPC</br>nautilus-private-vpc</br>CIDR 10.1.0.0/16]
+    PRIV_SUB[Subnet</br>nautilus-private-subnet</br>CIDR 10.1.1.0/24]
+    PRIV_EC2[Amazon EC2</br>nautilus-private-ec2</br>Private only</b>No public IP]
+    RT_PRIV[AWS Route Table</br>Route to 172.31.0.0/16 via peering]
+    SG_PRIV[AWS Security Group</br>Inbound SSH or ICMP</br>Source = public EC2 SG or IP]
   end
 
   PCX[Amazon VPC Peering</b>nautilus-vpc-peering]
@@ -117,11 +117,11 @@ flowchart TB
   PRIV_EC2 -. uses .-> SG_PRIV
 
   %% WHY Notes
-  WHY_PCX[Why peering</b>Private IP routing between VPCs</b>No NAT</b>No IGW]
-  WHY_RTS[Why routes</b>VPCs are isolated</b>Both sides must add CIDR routes via peering]
-  WHY_SG[Why SG rules</b>Routes forward only</b>SGs must allow SSH or ICMP from source]
-  WHY_PRIV[Why private IP only</b>Peering only carries private IP traffic</b>No transitive routing]
-  WHY_TEST[Test from public EC2</b>ping 10.1.1.x</b>ssh ec2-user@10.1.1.x</b>Use private IPs]
+  WHY_PCX[Why peering</br>Private IP routing between VPCs</br>No NAT</b>No IGW]
+  WHY_RTS[Why routes</br>VPCs are isolated</br>Both sides must add CIDR routes via peering]
+  WHY_SG[Why SG rules</br>Routes forward only</br>SGs must allow SSH or ICMP from source]
+  WHY_PRIV[Why private IP only</br>Peering only carries private IP traffic</br>No transitive routing]
+  WHY_TEST[Test from public EC2</br>ping 10.1.1.x</br>ssh ec2-user@10.1.1.x</br>Use private IPs]
 
   PCX -. dashed .- WHY_PCX
   RT_DEF -. dashed .- WHY_RTS
