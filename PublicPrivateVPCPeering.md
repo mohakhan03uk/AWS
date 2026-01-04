@@ -97,14 +97,14 @@ flowchart TB
     SG_PUB[AWS Security Group</br>Egress allows 10.1.0.0/16]
   end
 
-  subgraph PRIV_VPC[Amazon VPC</br>nautilus-private-vpc</br>CIDR 10.1.0.0/16]
+  subgraph PRIV_VPC[nautilus-private-VPC - CIDR 10.1.0.0/16]
     PRIV_SUB[Subnet</br>nautilus-private-subnet</br>CIDR 10.1.1.0/24]
     PRIV_EC2[Amazon EC2</br>nautilus-private-ec2</br>Private only</b>No public IP]
     RT_PRIV[AWS Route Table</br>Route to 172.31.0.0/16 via peering]
     SG_PRIV[AWS Security Group</br>Inbound SSH or ICMP</br>Source = public EC2 SG or IP]
   end
 
-  PCX[Amazon VPC Peering</b>nautilus-vpc-peering]
+  PCX[Amazon VPC Peering</br>nautilus-vpc-peering]
 
   %% Data Path
   PUB_EC2 --> RT_DEF
