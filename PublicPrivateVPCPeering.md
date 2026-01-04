@@ -87,7 +87,10 @@ Where it applies:
 ## 📐 Architecture (Mermaid)
 
 ```mermaid
+
 flowchart TB
+  %% GitHub-safe AWS-style diagram with WHY included
+
   subgraph DEF_VPC[Amazon VPC</b>Default VPC</b>CIDR 172.31.0.0/16]
     PUB_EC2[Amazon EC2</b>nautilus-public-ec2</b>Has Public IP]
     RT_DEF[AWS Route Table</b>Route to 10.1.0.0/16 via peering]
@@ -103,6 +106,7 @@ flowchart TB
 
   PCX[Amazon VPC Peering</b>nautilus-vpc-peering]
 
+  %% Data Path
   PUB_EC2 --> RT_DEF
   RT_DEF --> PCX
   PCX --> RT_PRIV
@@ -111,6 +115,37 @@ flowchart TB
   PRIV_SUB --- PRIV_EC2
   PUB_EC2 -. uses .-> SG_PUB
   PRIV_EC2 -. uses .-> SG_PRIV
+
+  %% WHY Notes
+  WHY_PCX[Why peering</b>Private IP routing between VPCs</b>No NAT</b>No IGW]
+  WHY_RTS[Why routes</b>VPCs are isolated</b>Both sides must add CIDR routes via peering]
+  WHY_SG[Why SG rules</b>Routes forward only</b>SGs must allow SSH or ICMP from source]
+  WHY_PRIV[Why private IP only</b>Peering only carries private IP traffic</b>No transitive routing]
+  WHY_TEST[Test from public EC2</b>ping 10.1.1.x</b>ssh ec2-user@10.1.1.x</b>Use private IPs]
+
+  PCX -. dashed .- WHY_PCX
+  RT_DEF -. dashed .- WHY_RTS
+  RT_PRIV -. dashed .- WHY_RTS
+  SG_PRIV -. dashed .- WHY_SG
+  SG_PUB -. dashed .- WHY_SG
+  PRIV_EC2 -. dashed .- WHY_PRIV
+  PUB_EC2 -. dashed .- WHY_TEST
+
+  %% Styling similar to AWS colors
+  classDef vpc fill:#eef6ff,stroke:#3b82f6,color:#0b2e5b
+  classDef ec2 fill:#fef9c3,stroke:#eab308,color:#3b2f04
+  classDef rt fill:#dcfce7,stroke:#16a34a,color:#052e16
+  classDef sg fill:#fde2e2,stroke:#ef4444,color:#4b0f0f
+  classDef pcx fill:#e9d5ff,stroke:#7c3aed,color:#2e1065
+  classDef why fill:#f5f5f5,stroke:#737373,color:#111827,stroke-dasharray: 5 5
+
+  class DEF_VPC,PRIV_VPC vpc
+  class PUB_EC2,PRIV_EC2 ec2
+  class RT_DEF,RT_PRIV rt
+  class SG_PUB,SG_PRIV sg
+  class PCX pcx
+  class WHY_PCX,WHY_RTS,WHY_SG,WHY_PRIV,WHY_TEST why
+
 ```
 ---
 
